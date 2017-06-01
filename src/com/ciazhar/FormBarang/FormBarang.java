@@ -245,7 +245,31 @@ public class FormBarang extends javax.swing.JFrame {
     }//GEN-LAST:event_createButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
-        // TODO add your handling code here:
+        int i = tabelBarang.getSelectedRow();
+        if(i==-1){
+            return;
+        }
+        
+        String id = (String) tabelModel.getValueAt(i, 0);
+        
+        try {
+            Connection c = Koneksi.getConnection();
+            
+            String sql = "DELETE FROM detil_barang where id_barang = ?";
+            
+            PreparedStatement ps = c.prepareStatement(sql);
+            
+            ps.setString(1, id);
+            
+            ps.executeUpdate();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println("Error "+e);
+        }
+        finally{
+            loadTabel();
+        }
+        
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     private void inputIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputIdActionPerformed
