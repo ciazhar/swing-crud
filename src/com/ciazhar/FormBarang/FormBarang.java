@@ -55,16 +55,16 @@ public class FormBarang extends javax.swing.JFrame {
                 Object[] objects = new Object[4];
                 
                 objects[0] = resultSet.getString("id_barang");
-                System.out.println(resultSet.getString("id_barang"));
+                System.out.println("id"+resultSet.getString("id_barang"));
                 
-                objects[0] = resultSet.getString("nama_barang");
-//                System.out.println(resultSet.getString("nama_barang"));
+                objects[1] = resultSet.getString("nama_barang");
+                System.out.println("nama"+resultSet.getString("nama_barang"));
                 
-                objects[0] = resultSet.getInt("jumlah_barang");
-//                System.out.println(resultSet.getInt("jumlah_barang"));
+                objects[2] = resultSet.getInt("jumlah_barang");
+                System.out.println("jumlah"+resultSet.getInt("jumlah_barang"));
                 
-                objects[0] = resultSet.getString("tanggal_transaksi");
-//                System.out.println(resultSet.getString("tanggal_transaksi"));
+                objects[3] = resultSet.getString("tanggal_transaksi");
+                System.out.println("tangal"+resultSet.getString("tanggal_transaksi"));
                 
                 tabelModel.addRow(objects);
             }
