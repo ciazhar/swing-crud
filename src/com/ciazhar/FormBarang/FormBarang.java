@@ -152,6 +152,11 @@ public class FormBarang extends javax.swing.JFrame {
                 "ID", "Nama Barang", "Jumlah Barang", "Tanggal Transaksi"
             }
         ));
+        tabelBarang.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelBarangMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tabelBarang);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -313,6 +318,20 @@ public class FormBarang extends javax.swing.JFrame {
             loadTabel();
         }
     }//GEN-LAST:event_updateButtonActionPerformed
+
+    private void tabelBarangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelBarangMouseClicked
+        int i = tabelBarang.getSelectedRow();
+        if(i==-1){
+            return;
+        }
+        String id = (String) tabelModel.getValueAt(i, 0);
+        inputId.setText(id);
+        String nama_barang = (String) tabelModel.getValueAt(i, 1);
+        inputNama.setText(nama_barang);
+        int jumlah_barang = (int) tabelModel.getValueAt(i, 2);
+        inputJumlahBarang.setValue(jumlah_barang);
+        
+    }//GEN-LAST:event_tabelBarangMouseClicked
 
     /**
      * @param args the command line arguments
