@@ -16,7 +16,7 @@ public class Koneksi {
             try {
                 String DB = "jdbc:mysql://localhost:3306/form_barang";
                 String user = "root";
-                String pass = "ysalovedsp329";
+                String pass = "";
                 
                 DriverManager.registerDriver(new com.mysql.jdbc.Driver());
                 connection = DriverManager.getConnection(DB,user,pass);
