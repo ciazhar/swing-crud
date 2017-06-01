@@ -8,11 +8,13 @@
  * Created: May 25, 2017
  */
 
-create table barang (
+create table detil_barang (
     id_barang varchar(10),
     nama_barang varchar(30),
     jumlah_barang int(5),
-    waktu_input date,
+    tanggal_transaksi date,
     primary key (id_barang)
 );
 
+insert into detil_barang (id_barang,nama_barang,jumlah_barang, waktu_input)
+values ("001","Sempak",10,"2014-10-13");

@@ -5,17 +5,75 @@
  */
 package com.ciazhar.FormBarang;
 
+import static com.sun.corba.se.impl.util.Utility.printStackTrace;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Date;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ciazhar
  */
 public class FormBarang extends javax.swing.JFrame {
 
+    
     /**
      * Creates new form FormAdmin
      */
+    
+    private DefaultTableModel tabelModel;
+    
     public FormBarang() {
         initComponents();
+        
+        tabelModel = new DefaultTableModel();
+        tabelBarang.setModel(tabelModel);
+        tabelModel.addColumn("ID");
+        tabelModel.addColumn("Nama Barang");
+        tabelModel.addColumn("Jumlah Barang");
+        tabelModel.addColumn("Tanggal Transaksi");
+        loadTabel();
+    }
+    
+    public void loadTabel(){
+        tabelModel.getDataVector().removeAllElements();
+        tabelModel.fireTableDataChanged();
+        
+        try {
+            Connection connection = Koneksi.getConnection();
+            Statement statement = connection.createStatement();
+            String sql = "SELECT * FROM detil_barang";
+            ResultSet resultSet = statement.executeQuery(sql);
+            
+            while(resultSet.next()){
+                Object[] objects = new Object[4];
+                
+                objects[0] = resultSet.getString("id_barang");
+                System.out.println(resultSet.getString("id_barang"));
+                
+                objects[0] = resultSet.getString("nama_barang");
+//                System.out.println(resultSet.getString("nama_barang"));
+                
+                objects[0] = resultSet.getInt("jumlah_barang");
+//                System.out.println(resultSet.getInt("jumlah_barang"));
+                
+                objects[0] = resultSet.getString("tanggal_transaksi");
+//                System.out.println(resultSet.getString("tanggal_transaksi"));
+                
+                tabelModel.addRow(objects);
+            }
+            
+            resultSet.close();
+            statement.close();  
+        } catch (SQLException e) {
+            System.out.println("Error : "+e);
+        }
     }
 
     /**
@@ -30,15 +88,15 @@ public class FormBarang extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        namaBarangTextField = new javax.swing.JTextField();
-        idTextField = new javax.swing.JTextField();
-        jumlahBarangSpinner = new javax.swing.JSpinner();
+        inputNama = new javax.swing.JTextField();
+        inputId = new javax.swing.JTextField();
+        inputJumlahBarang = new javax.swing.JSpinner();
         createButton = new javax.swing.JButton();
         updateButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tabelBarang = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -48,15 +106,15 @@ public class FormBarang extends javax.swing.JFrame {
 
         jLabel3.setText("Jumlah Barang");
 
-        namaBarangTextField.addActionListener(new java.awt.event.ActionListener() {
+        inputNama.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                namaBarangTextFieldActionPerformed(evt);
+                inputNamaActionPerformed(evt);
             }
         });
 
-        idTextField.addActionListener(new java.awt.event.ActionListener() {
+        inputId.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                idTextFieldActionPerformed(evt);
+                inputIdActionPerformed(evt);
             }
         });
 
@@ -68,6 +126,11 @@ public class FormBarang extends javax.swing.JFrame {
         });
 
         updateButton.setText("Update");
+        updateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateButtonActionPerformed(evt);
+            }
+        });
 
         deleteButton.setText("Delete");
         deleteButton.addActionListener(new java.awt.event.ActionListener() {
@@ -76,7 +139,9 @@ public class FormBarang extends javax.swing.JFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jLabel4.setText("Aplikasi Form Barang");
+
+        tabelBarang.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -84,91 +149,146 @@ public class FormBarang extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "ID", "Nama", "Jumlah", "Waktu"
+                "ID", "Nama Barang", "Jumlah Barang", "Tanggal Transaksi"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
-
-        jLabel4.setText("Aplikasi Form Barang");
+        jScrollPane2.setViewportView(tabelBarang);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1)
+                    .addComponent(createButton)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(updateButton)
+                        .addGap(52, 52, 52)
+                        .addComponent(deleteButton))
+                    .addComponent(inputId)
+                    .addComponent(inputNama)
+                    .addComponent(inputJumlahBarang, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)))
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(createButton)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel1))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(updateButton)
-                                        .addGap(52, 52, 52)
-                                        .addComponent(deleteButton))
-                                    .addComponent(idTextField)
-                                    .addComponent(namaBarangTextField)
-                                    .addComponent(jumlahBarangSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 1, Short.MAX_VALUE))))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(108, 108, 108)
-                        .addComponent(jLabel4)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jLabel4))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 453, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(idTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(inputId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
-                    .addComponent(namaBarangTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(inputNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jumlahBarangSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(inputJumlahBarang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(createButton)
                     .addComponent(updateButton)
                     .addComponent(deleteButton))
-                .addGap(50, 50, 50)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void createButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createButtonActionPerformed
-        // TODO add your handling code here:
+        String id = inputId.getText();
+        String namaBarang = inputNama.getText();
+        int jumlahBarang = (int) inputJumlahBarang.getValue();
+        java.util.Date utilDate = new java.util.Date();
+        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+        try {
+            Connection connection = Koneksi.getConnection();
+            String query = "insert into detil_barang values(?,?,?,?)";
+            
+            PreparedStatement statement = connection.prepareStatement(query);
+            
+            statement.setString(1, id);
+            statement.setString(2, namaBarang);
+            statement.setInt(3, jumlahBarang);
+            statement.setDate(4, sqlDate);
+            
+            statement.executeUpdate();
+            statement.close();
+            System.out.println("sukses");
+//            loadTabel();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Create Failed"+e);
+        }
+        finally{
+            loadTabel();
+        }
+        
     }//GEN-LAST:event_createButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_deleteButtonActionPerformed
 
-    private void idTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idTextFieldActionPerformed
+    private void inputIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputIdActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_idTextFieldActionPerformed
+    }//GEN-LAST:event_inputIdActionPerformed
 
-    private void namaBarangTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_namaBarangTextFieldActionPerformed
+    private void inputNamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputNamaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_namaBarangTextFieldActionPerformed
+    }//GEN-LAST:event_inputNamaActionPerformed
+
+    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
+        int i = tabelBarang.getSelectedRow();
+        if(i==-1){
+            return;
+        }
+        String id = (String) tabelModel.getValueAt(i, 0);
+        String nama_barang = inputNama.getText();
+        int jumlah_barang = (int) inputJumlahBarang.getValue();
+        java.util.Date utilDate = new java.util.Date();
+        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+        
+        try {
+            System.out.println(id);
+            Connection connection = Koneksi.getConnection();
+            String sql = "UPDATE detil_barang "
+                    + "SET nama_barang = ?, jumlah_barang = ?, tanggal_transaksi = ? "
+                    + "WHERE id_barang = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, nama_barang);
+            preparedStatement.setInt(2, jumlah_barang);
+            preparedStatement.setDate(3, sqlDate);
+            preparedStatement.setString(4, id);
+            
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            
+        } catch (SQLException e) {
+            System.out.println("Error " +e);    
+        }
+        finally{
+            loadTabel();
+        }
+    }//GEN-LAST:event_updateButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -209,15 +329,16 @@ public class FormBarang extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton createButton;
     private javax.swing.JButton deleteButton;
-    private javax.swing.JTextField idTextField;
+    private javax.swing.JTextField inputId;
+    private javax.swing.JSpinner inputJumlahBarang;
+    private javax.swing.JTextField inputNama;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JSpinner jumlahBarangSpinner;
-    private javax.swing.JTextField namaBarangTextField;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable tabelBarang;
     private javax.swing.JButton updateButton;
     // End of variables declaration//GEN-END:variables
 }
+
